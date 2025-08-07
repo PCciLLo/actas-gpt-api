@@ -5,6 +5,7 @@ __pycache__/
 
 # Archivos Word generados temporalmente
 *.docx
+!plantilla_acta_con_marcadores_v4.1.docx
 
 # Archivos de configuración de usuario
 *.DS_Store

@@ -1,30 +1,42 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from generar_acta import generar_acta
-import uuid
+import tempfile
 import os
 
-app = FastAPI()
+app = FastAPI() 
 
 class ActaInput(BaseModel):
     datos: dict
 
 @app.post("/generar-acta")
-def generar(data: ActaInput):
-    # Ruta de la plantilla (debe estar en el mismo directorio del proyecto)
-    plantilla = "plantilla_acta_con_marcadores_v4.1.docx"
-    nombre_salida = f"acta-{uuid.uuid4().hex}.docx"
+def generar_acta_endpoint(input: ActaInput):
+    try:
+        print("📥 Datos recibidos:")
+        print(input.datos)
+        # Crear archivo temporal
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as temp:
+            salida_path = temp.name
 
-    generar_acta(plantilla, nombre_salida, data.datos)
+        # Ruta a tu plantilla
+        plantilla_path = "plantilla_acta_con_marcadores_v4.1.docx"
 
-    # Devolver archivo en binario como hex para simplicidad
-    with open(nombre_salida, "rb") as f:
-        contenido = f.read()
+        # Generar acta
+        generar_acta(plantilla_path, salida_path, input.datos)
 
-    # Opcional: eliminar archivo generado tras devolverlo
-    os.remove(nombre_salida)
+        # Leer el archivo generado
+        with open(salida_path, "rb") as f:
+            contenido = f.read()
 
-    return {
-        "filename": nombre_salida,
-        "content": contenido.hex()
-    }
+        # Borrar el temporal
+        os.remove(salida_path)
+
+        return {
+            "filename": os.path.basename(salida_path),
+            "content": contenido.hex()  # lo devuelves como hexadecimal para transporte seguro
+        }
+
+    except Exception as e:
+        print("❌ Error generado:")
+        print(e)  # Log al terminal
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
