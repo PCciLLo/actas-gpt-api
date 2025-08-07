@@ -33,7 +33,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "filename": { "type": "string" },
+                    "content": { "type": "string" }
+                  },
+                  "required": ["filename", "content"]
                 }
               }
             }
