@@ -16,12 +16,13 @@
         "operationId": "generar_acta_endpoint_generar_acta_post",
         "summary": "Generar Acta Endpoint",
         "description": "Genera un archivo .docx con los datos del acta",
+        "x-openai-allow": true,
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ActaInput"
+                "$ref": "#/components/schemas/Payload"
               }
             }
           }
@@ -53,50 +54,85 @@
   },
   "components": {
     "schemas": {
-      "ActaInput": {
-        "title": "ActaInput",
+      "Payload": {
         "type": "object",
         "properties": {
           "datos": {
-            "type": "object"
+            "$ref": "#/components/schemas/ActaInput"
           }
         },
         "required": ["datos"]
       },
-      "ValidationError": {
-        "title": "ValidationError",
+      "ActaInput": {
         "type": "object",
         "properties": {
-          "loc": {
-            "title": "Location",
+          "ASUNTO": { "type": "string" },
+          "FECHA": { "type": "string" },
+          "CLIENTE": { "type": "string" },
+          "HORA_INICIO": { "type": "string" },
+          "HORA_FIN": { "type": "string" },
+          "PROYECTO": { "type": "string" },
+          "TIPO_REUNION": { "type": "string" },
+          "ID_PROYECTO": { "type": "string" },
+          "OBJETIVO": { "type": "string" },
+          "AGENDA": { "type": "string" },
+          "TEMAS": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "ACUERDOS": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "PARTICIPANTES": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer" },
+                "nombre": { "type": "string" },
+                "iniciales": { "type": "string" },
+                "compañía": { "type": "string" }
+              }
             }
           },
-          "msg": {
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "title": "Error Type",
-            "type": "string"
+          "PROXIMOS_PASOS": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "responsable": { "type": "string" },
+                "título": { "type": "string" },
+                "descripcion": { "type": "string" },
+                "fecha": { "type": "string" },
+                "estado": { "type": "string" }
+              }
+            }
           }
-        },
-        "required": ["loc", "msg", "type"]
+        }
       },
       "HTTPValidationError": {
-        "title": "HTTPValidationError",
         "type": "object",
         "properties": {
           "detail": {
-            "title": "Detail",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ValidationError"
             }
           }
         }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "loc": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "msg": { "type": "string" },
+          "type": { "type": "string" }
+        },
+        "required": ["loc", "msg", "type"]
       }
     }
   }
