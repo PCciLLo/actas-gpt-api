@@ -89,7 +89,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "integer" },
+                "id": { "type": "string" },
                 "nombre": { "type": "string" },
                 "iniciales": { "type": "string" },
                 "compañía": { "type": "string" }
