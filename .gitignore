@@ -1,0 +1,11 @@
+# Entorno virtual (si usas venv)
+venv/
+__pycache__/
+*.pyc
+
+# Archivos Word generados temporalmente
+*.docx
+
+# Archivos de configuración de usuario
+*.DS_Store
+.env
