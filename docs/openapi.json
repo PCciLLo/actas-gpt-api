@@ -1,0 +1,103 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ActasGPT",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://actas-gpt-api.onrender.com",
+      "description": "Render deployment"
+    }
+  ],
+  "paths": {
+    "/generar-acta": {
+      "post": {
+        "operationId": "generar_acta_endpoint_generar_acta_post",
+        "summary": "Generar Acta Endpoint",
+        "description": "Genera un archivo .docx con los datos del acta",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActaInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActaInput": {
+        "title": "ActaInput",
+        "type": "object",
+        "properties": {
+          "datos": {
+            "type": "object"
+          }
+        },
+        "required": ["datos"]
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": ["loc", "msg", "type"]
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      }
+    }
+  }
+}
